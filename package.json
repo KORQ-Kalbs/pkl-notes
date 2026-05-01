@@ -1,0 +1,27 @@
+{
+  "name": "pkl-notes",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "clean": "node -e \"const fs=require('fs'); try{fs.rmSync('.next',{recursive:true,force:true});}catch{} try{fs.rmSync('node_modules/.cache',{recursive:true,force:true});}catch{}\"",
+    "predev": "npm run clean",
+    "dev": "next dev",
+    "prebuild": "npm run clean",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "gsap": "^3.12.5",
+    "lucide-react": "^0.451.0",
+    "next": "14.2.35",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.13",
+    "tailwindcss": "^4.2.4"
+  }
+}
