@@ -5,12 +5,12 @@ export default function LoginView() {
     <div className="relative min-h-screen overflow-hidden text-slate-950">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-0 top-16 h-72 w-72 rounded-full bg-teal-400/20 blur-3xl" />
-        <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-orange-300/20 blur-3xl" />
+        <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-orange-300/18 blur-3xl" />
       </div>
 
       <main className="mx-auto grid min-h-screen w-full max-w-7xl items-center gap-10 px-6 py-10 lg:grid-cols-[0.95fr_1.05fr] lg:px-12">
         <section className="space-y-6">
-          <span className="inline-flex rounded-full border border-teal-500/20 bg-teal-50/90 px-4 py-2 text-sm font-medium text-teal-900 shadow-sm">
+          <span className="inline-flex rounded-full border border-teal-500/15 bg-white/70 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm backdrop-blur">
             Welcome back
           </span>
           <h1 className="max-w-xl text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl">
@@ -30,16 +30,16 @@ export default function LoginView() {
             ].map((item) => (
               <div
                 key={item}
-                className="rounded-3xl border border-white/70 bg-white/75 p-4 shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+                className="rounded-3xl border border-white/70 bg-white/82 p-4 shadow-[0_12px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl"
               >
-                <div className="h-2 w-2 rounded-full bg-teal-500" />
+                <div className="h-2 w-2 rounded-full bg-teal-500/80" />
                 <p className="mt-4 text-sm leading-6 text-slate-700">{item}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="rounded-[2rem] border border-white/80 bg-[var(--surface)] p-6 shadow-[0_24px_90px_rgba(15,23,42,0.14)] backdrop-blur-2xl sm:p-8">
+        <section className="rounded-[2rem] border border-white/80 bg-white/78 p-6 shadow-[0_24px_90px_rgba(15,23,42,0.12)] backdrop-blur-2xl sm:p-8">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
@@ -65,7 +65,7 @@ export default function LoginView() {
               <input
                 type="email"
                 placeholder="student@school.id"
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10"
+                className="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10"
               />
             </label>
 
@@ -76,7 +76,7 @@ export default function LoginView() {
               <input
                 type="password"
                 placeholder="Enter your password"
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10"
+                className="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10"
               />
             </label>
 

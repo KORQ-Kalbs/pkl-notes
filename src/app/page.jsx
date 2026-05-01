@@ -32,13 +32,13 @@ export default function HomePage() {
           <div className="hidden items-center gap-3 sm:flex">
             <Link
               href="/login"
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 "
             >
               Sign in
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+              className="rounded-full border border-slate-200  px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
             >
               Create account
             </Link>
@@ -65,15 +65,9 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/dashboard"
-                className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(15,23,42,0.22)] transition hover:-translate-y-0.5 hover:bg-slate-800"
-              >
-                Open dashboard
-              </Link>
-              <Link
-                href="/login"
                 className="rounded-full border border-slate-300 bg-white/80 px-6 py-3 text-sm font-semibold text-slate-700 backdrop-blur transition hover:-translate-y-0.5 hover:border-slate-400 hover:bg-white"
               >
-                Browse login
+                Open dashboard
               </Link>
             </div>
 

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import PopupSettings from "../components/popup-settings";
 
 const metrics = [
   { label: "Days logged", value: "28" },
@@ -45,12 +45,7 @@ export default function DashboardMain() {
               Daily logbook, search, and report-ready notes.
             </div>
           </div>
-          <Link
-            href="/login"
-            className="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
-          >
-            Sign out
-          </Link>
+          <PopupSettings />
         </div>
 
         <section className="grid gap-4 py-8 sm:grid-cols-3">
