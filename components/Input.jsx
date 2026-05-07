@@ -1,10 +1,10 @@
-import styles from "./ui.module.css";
-
 export default function Input({ label, className = "", ...props }) {
   return (
-    <label className={`${styles.field} ${className}`.trim()}>
-      {label ? <span className={styles.label}>{label}</span> : null}
-      <input className={styles.input} {...props} />
+    <label className={`flex flex-col gap-1 ${className}`.trim()}>
+      {label ? (
+        <span className="text-xs text-text-secondary">{label}</span>
+      ) : null}
+      <input className="input-custom" {...props} />
     </label>
   );
 }

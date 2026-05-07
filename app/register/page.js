@@ -7,13 +7,11 @@ import { supabase } from "../../lib/supabase";
 import { setAuthCookies } from "../../lib/authCookies";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import styles from "./page.module.css";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [resending, setResending] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
 
@@ -52,45 +50,17 @@ export default function RegisterPage() {
     setLoading(false);
   };
 
-  const handleResendConfirmation = async () => {
-    if (!form.email) {
-      setError("Enter your email first to resend the confirmation link.");
-      return;
-    }
-
-    setResending(true);
-    setError("");
-    setInfo("");
-
-    const { error: resendError } = await supabase.auth.resend({
-      type: "signup",
-      email: form.email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/login`,
-      },
-    });
-
-    if (resendError) {
-      setError(resendError.message);
-      setResending(false);
-      return;
-    }
-
-    setInfo("Confirmation email sent. Please check inbox and spam folder.");
-    setResending(false);
-  };
-
   return (
-    <main className={styles.page}>
-      <div className={styles.card}>
-        <div className={styles.header}>
-          <p className={styles.kicker}>Create your space</p>
-          <h1 className={styles.title}>Start PKL Notes</h1>
-          <p className={styles.subtitle}>
+    <main className="min-h-screen grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10 items-center px-[6vw] py-18 gradient-hero-light">
+      <div className="card-custom p-10">
+        <div className="mb-8">
+          <p className="text-kicker mb-4">Create your space</p>
+          <h1 className="font-display text-[2.2rem] mb-2">Start PKL Notes</h1>
+          <p className="text-text-secondary">
             Build a clean internship log with daily structure and clarity.
           </p>
         </div>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className="grid gap-4" onSubmit={handleSubmit}>
           <Input
             label="Email"
             type="email"
@@ -113,40 +83,40 @@ export default function RegisterPage() {
             {loading ? "Creating account..." : "Create account"}
           </Button>
         </form>
-        {error ? <p className={styles.error}>{error}</p> : null}
-        {info ? <p className={styles.info}>{info}</p> : null}
-        <button
-          type="button"
-          className={styles.inlineAction}
-          onClick={handleResendConfirmation}
-          disabled={resending}
-        >
-          {resending ? "Resending..." : "Resend confirmation email"}
-        </button>
-        <p className={styles.helper}>
+        {error ? <p className="mt-4 text-danger">{error}</p> : null}
+        {info ? <p className="mt-4 text-info">{info}</p> : null}
+        <p className="mt-5 text-text-secondary text-sm">
           Already registered?{" "}
-          <Link className={styles.link} href="/login">
+          <Link className="text-warning font-semibold" href="/login">
             Sign in
           </Link>
         </p>
-        <Link className={styles.backLink} href="/">
+        <Link className="inline-flex mt-5 text-text-secondary text-xs" href="/">
           Back to home
         </Link>
       </div>
-      <div className={styles.panel}>
-        <h2>Built for PKL consistency</h2>
+      <div className="bg-bg-secondary/70 border border-border-color rounded-[26px] p-10 text-text-secondary grid gap-6">
+        <h2 className="text-text-primary font-display text-[1.8rem]">
+          Built for PKL consistency
+        </h2>
         <p>
           Create daily notes with activity, reflection, and next plan sections
           so nothing important gets lost during your internship.
         </p>
-        <div className={styles.panelGrid}>
+        <div className="grid gap-4">
           <div>
-            <span>Quick submissions</span>
-            <p>One focused form for every daily log.</p>
+            <span className="text-text-primary font-semibold">
+              Quick submissions
+            </span>
+            <p className="mt-1 text-sm">
+              One focused form for every daily log.
+            </p>
           </div>
           <div>
-            <span>Admin ready</span>
-            <p>Notes arrive in the review queue instantly.</p>
+            <span className="text-text-primary font-semibold">Admin ready</span>
+            <p className="mt-1 text-sm">
+              Notes arrive in the review queue instantly.
+            </p>
           </div>
         </div>
       </div>

@@ -5,9 +5,10 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export async function middleware(request) {
-  const token = request.cookies.get("sb-access-token")?.value;
+  const rawToken = request.cookies.get("sb-access-token")?.value;
+  const accessToken = rawToken ? decodeURIComponent(rawToken) : null;
 
-  if (!token) {
+  if (!accessToken) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -20,10 +21,14 @@ export async function middleware(request) {
       persistSession: false,
       autoRefreshToken: false,
     },
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
   });
 
-  const { data: userData, error: userError } =
-    await supabase.auth.getUser(token);
+  const { data: userData, error: userError } = await supabase.auth.getUser();
 
   if (userError || !userData?.user) {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -34,7 +39,9 @@ export async function middleware(request) {
       .from("users")
       .select("role")
       .eq("email_user", userData.user.id)
-      .single();
+      .order("role", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
     if (profileError || !profile?.role) {
       return NextResponse.redirect(new URL("/dashboard", request.url));

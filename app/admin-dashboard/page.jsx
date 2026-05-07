@@ -1,237 +1,134 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { supabase } from "../../lib/supabase";
-import Button from "../../components/Button";
-import Badge from "../../components/Badge";
-import styles from "./page.module.css";
+import "../globals.css";
+
+const styles = {
+  page: "min-h-screen py-18 px-[6vw] bg-bg-primary",
+  header: "flex flex-col gap-3 mb-10",
+  kicker: "text-kicker",
+  subtitle: "text-text-secondary",
+  stats: "grid gap-4 md:grid-cols-4",
+  statCard: "card-custom",
+  statLabel: "text-text-secondary text-sm",
+  statValue: "text-[1.8rem] font-display",
+  sectionHeader: "flex items-center justify-between mb-4",
+  listSection: "mt-10",
+  notesList: "grid gap-4",
+  noteCard:
+    "p-4 rounded-lg border border-border-color bg-white/5 flex items-start justify-between",
+  noteDate: "text-sm text-text-secondary",
+  noteSummary: "mt-2 text-text-secondary",
+  noteMeta: "text-sm text-text-secondary",
+  muted: "text-text-secondary",
+  error: "text-danger",
+};
 
 export default function AdminDashboardPage() {
   const [notes, setNotes] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [usersCount, setUsersCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    loadNotes();
+    loadStats();
   }, []);
 
-  const loadNotes = async () => {
+  const loadStats = async () => {
     setLoading(true);
     setError("");
 
-    const { data, error: notesError } = await supabase
-      .from("pkl_notes")
-      .select(
-        "id, title, summary, status, note_date, location, users_id, activities, reflection, next_plan, users:users_id ( id )",
-      )
-      .order("created_at", { ascending: false });
+    const [{ data: notesData, error: notesError }, usersResult] =
+      await Promise.all([
+        supabase
+          .from("pkl_notes")
+          .select("id, note_date, title, summary, status, location, created_at")
+          .order("note_date", { ascending: false }),
+        supabase.from("users").select("id", { count: "exact", head: true }),
+      ]);
 
     if (notesError) {
       setError("Unable to load notes.");
-      setNotes([]);
-      setSelected(null);
-      setLoading(false);
-      return;
     }
 
-    setNotes(data || []);
-    setSelected(data?.[0] ?? null);
+    if (usersResult.error) {
+      setError("Unable to load users.");
+    }
+
+    setNotes(notesData || []);
+    setUsersCount(usersResult.count || 0);
     setLoading(false);
   };
 
-  const counts = useMemo(() => {
-    return notes.reduce(
-      (acc, note) => {
-        if (note.status === "pending") acc.pending += 1;
-        if (note.status === "approved") acc.approved += 1;
-        if (note.status === "flagged") acc.flagged += 1;
-        return acc;
-      },
-      { pending: 0, approved: 0, flagged: 0 },
-    );
+  const stats = useMemo(() => {
+    const total = notes.length;
+    const pending = notes.filter((note) => note.status === "pending").length;
+    const approved = notes.filter((note) => note.status === "approved").length;
+    const flagged = notes.filter((note) => note.status === "flagged").length;
+
+    return { total, pending, approved, flagged };
   }, [notes]);
 
-  const queue = notes.filter((note) =>
-    ["pending", "flagged", "hold"].includes(note.status),
-  );
-
-  const handleStatus = async (nextStatus) => {
-    if (!selected) {
-      return;
-    }
-
-    const { error: updateError } = await supabase
-      .from("pkl_notes")
-      .update({ status: nextStatus })
-      .eq("id", selected.id);
-
-    if (updateError) {
-      setError("Unable to update status.");
-      return;
-    }
-
-    setNotes((prev) =>
-      prev.map((note) =>
-        note.id === selected.id ? { ...note, status: nextStatus } : note,
-      ),
-    );
-    setSelected((prev) => (prev ? { ...prev, status: nextStatus } : prev));
-  };
+  const recentNotes = useMemo(() => notes.slice(0, 5), [notes]);
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <div>
-          <p className={styles.kicker}>Dashboard</p>
-          <h1>Overview and moderation queue</h1>
-        </div>
-        <Link href="/dashboard" className={styles.userLink}>
-          User dashboard
-        </Link>
+        <p className={styles.kicker}>Admin overview</p>
+        <h1 className="font-display text-[2.2rem]">Workspace pulse</h1>
+        <p className={styles.subtitle}>
+          Monitor submissions, approvals, and active users across the system.
+        </p>
       </header>
 
       <section className={styles.stats}>
         <div className={styles.statCard}>
-          <p>Pending</p>
-          <h2>{counts.pending}</h2>
+          <p className={styles.statLabel}>Registered users</p>
+          <p className={styles.statValue}>{usersCount}</p>
         </div>
         <div className={styles.statCard}>
-          <p>Approved</p>
-          <h2>{counts.approved}</h2>
+          <p className={styles.statLabel}>Total notes</p>
+          <p className={styles.statValue}>{stats.total}</p>
         </div>
         <div className={styles.statCard}>
-          <p>Flagged</p>
-          <h2>{counts.flagged}</h2>
+          <p className={styles.statLabel}>Pending review</p>
+          <p className={styles.statValue}>{stats.pending}</p>
+        </div>
+        <div className={styles.statCard}>
+          <p className={styles.statLabel}>Flagged</p>
+          <p className={styles.statValue}>{stats.flagged}</p>
         </div>
       </section>
 
-      <div className={styles.body}>
-        <div className={styles.primaryColumn}>
-          <section className={styles.queueCard}>
-            <div className={styles.queueHeader}>
-              <div>
-                <p className={styles.queueLabel}>Queue</p>
-                <h2>Notes to review</h2>
-              </div>
-              <span className={styles.queueCount}>{queue.length} items</span>
-            </div>
-            {loading ? (
-              <p className={styles.muted}>Loading queue...</p>
-            ) : queue.length === 0 ? (
-              <p className={styles.muted}>No items waiting for review.</p>
-            ) : (
-              <div className={styles.queueList}>
-                {queue.map((note) => {
-                  const name = note.users?.id
-                    ? `User ${note.users.id}`
-                    : `User ${note.users_id}`;
-                  return (
-                    <button
-                      type="button"
-                      key={note.id}
-                      className={`${styles.queueItem} ${
-                        selected?.id === note.id ? styles.queueItemActive : ""
-                      }`}
-                      onClick={() => setSelected(note)}
-                    >
-                      <div>
-                        <p className={styles.queueName}>{name}</p>
-                        <p className={styles.queueTitle}>{note.title}</p>
-                      </div>
-                      <Badge variant={note.status}>{note.status}</Badge>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </section>
+      <section className={styles.listSection}>
+        <div className={styles.sectionHeader}>
+          <h2>Recent notes</h2>
+          <span className={styles.muted}>{notes.length} total</span>
+        </div>
 
-          <section className={styles.detailCard}>
-            <div className={styles.detailHeader}>
-              <div>
-                <p className={styles.queueLabel}>Review</p>
-                <h2>Selected note</h2>
-              </div>
-              <div className={styles.detailActions}>
-                <Button
-                  size="sm"
-                  variant="primary"
-                  onClick={() => handleStatus("approved")}
-                >
-                  Approve
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => handleStatus("flagged")}
-                >
-                  Flag
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => handleStatus("hold")}
-                >
-                  Hold
-                </Button>
-              </div>
-            </div>
-            {selected ? (
-              <div className={styles.detailBody}>
+        {loading ? (
+          <p className={styles.muted}>Loading notes...</p>
+        ) : error ? (
+          <p className={styles.error}>{error}</p>
+        ) : recentNotes.length === 0 ? (
+          <p className={styles.muted}>No notes available.</p>
+        ) : (
+          <div className={styles.notesList}>
+            {recentNotes.map((note) => (
+              <article key={note.id} className={styles.noteCard}>
                 <div>
-                  <p className={styles.detailMeta}>{selected.note_date}</p>
-                  <h3>{selected.title}</h3>
-                  <p className={styles.detailSummary}>{selected.summary}</p>
+                  <p className={styles.noteDate}>{note.note_date}</p>
+                  <h3>{note.title}</h3>
+                  <p className={styles.noteSummary}>{note.summary}</p>
+                  <p className={styles.noteMeta}>{note.location}</p>
                 </div>
-                <div className={styles.detailGrid}>
-                  <div>
-                    <span>Activities</span>
-                    <p>{selected.activities}</p>
-                  </div>
-                  <div>
-                    <span>Reflection</span>
-                    <p>{selected.reflection}</p>
-                  </div>
-                  <div>
-                    <span>Next plan</span>
-                    <p>{selected.next_plan}</p>
-                  </div>
-                  <div>
-                    <span>Location</span>
-                    <p>{selected.location}</p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <p className={styles.muted}>Select a note to review.</p>
-            )}
-            {error ? <p className={styles.error}>{error}</p> : null}
-          </section>
-        </div>
-
-        <div className={styles.secondaryColumn}>
-          <section className={styles.actionCard}>
-            <p className={styles.queueLabel}>Actions</p>
-            <h3>Review approvals</h3>
-            <Button variant="primary" size="lg" className={styles.actionButton}>
-              Review approvals
-            </Button>
-            <Button variant="ghost" size="lg" className={styles.actionButton}>
-              Manage users
-            </Button>
-          </section>
-
-          <section className={styles.statusCard}>
-            <p className={styles.queueLabel}>Status</p>
-            <p>
-              This is a plain black admin shell with sidebar navigation, ready
-              for backend wiring.
-            </p>
-          </section>
-        </div>
-      </div>
+                <span className={styles.muted}>{note.status}</span>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

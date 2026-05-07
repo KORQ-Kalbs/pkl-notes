@@ -5,10 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import { setAuthCookies } from "../../lib/authCookies";
-import { ensureUserProfile } from "../../lib/userProfile";
+import { getUserProfile } from "../../lib/userProfile";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import styles from "./page.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -59,12 +58,12 @@ export default function LoginPage() {
 
     setAuthCookies(data.session);
 
-    const { profile, error: profileError } = await ensureUserProfile(
+    const { profile, error: profileError } = await getUserProfile(
       supabase,
       authUser,
     );
 
-    if (profileError) {
+    if (profileError || !profile) {
       console.error("Profile lookup failed:", profileError);
       setError("Unable to load your account profile. Please try again.");
       setLoading(false);
@@ -103,16 +102,18 @@ export default function LoginPage() {
   };
 
   return (
-    <main className={styles.page}>
-      <div className={styles.card}>
-        <div className={styles.header}>
-          <p className={styles.kicker}>Welcome back</p>
-          <h1 className={styles.title}>Sign in to PKL Notes</h1>
-          <p className={styles.subtitle}>
+    <main className="min-h-screen grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10 items-center px-[6vw] py-18 gradient-hero-light">
+      <div className="p-10 card-custom">
+        <div className="mb-8">
+          <p className="mb-4 text-kicker">Welcome back</p>
+          <h1 className="font-display text-[2.2rem] mb-2">
+            Sign in to PKL Notes
+          </h1>
+          <p className="text-text-secondary">
             Continue your internship log with a clear daily rhythm.
           </p>
         </div>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className="grid gap-4" onSubmit={handleSubmit}>
           <Input
             label="Email"
             type="email"
@@ -135,40 +136,50 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
-        {error ? <p className={styles.error}>{error}</p> : null}
-        {info ? <p className={styles.info}>{info}</p> : null}
+        {error ? <p className="mt-4 text-danger">{error}</p> : null}
+        {info ? <p className="mt-4 text-info">{info}</p> : null}
         <button
           type="button"
-          className={styles.inlineAction}
+          className="p-0 mt-3 font-semibold bg-transparent border-0 cursor-pointer text-warning disabled:opacity-60 disabled:cursor-not-allowed"
           onClick={handleResendConfirmation}
           disabled={resending}
         >
           {resending ? "Resending..." : "Resend confirmation email"}
         </button>
-        <p className={styles.helper}>
+        <p className="mt-5 text-sm text-text-secondary">
           New here?{" "}
-          <Link className={styles.link} href="/register">
+          <Link className="font-semibold text-warning" href="/register">
             Create an account
           </Link>
         </p>
-        <Link className={styles.backLink} href="/">
+        <Link className="inline-flex mt-5 text-xs text-text-secondary" href="/">
           Back to home
         </Link>
       </div>
-      <div className={styles.panel}>
-        <h2>Daily clarity, every day</h2>
+      <div className="bg-bg-secondary/70 border border-border-color rounded-[26px] p-10 text-text-secondary grid gap-6">
+        <h2 className="text-text-primary font-display text-[1.8rem]">
+          Daily clarity, every day
+        </h2>
         <p>
           Track activities, reflections, and plans with a minimal layout
           designed for fast writing and effortless review.
         </p>
-        <div className={styles.panelGrid}>
+        <div className="grid gap-4">
           <div>
-            <span>Structured entries</span>
-            <p>Keep titles, summaries, and reflections in sync.</p>
+            <span className="font-semibold text-text-primary">
+              Structured entries
+            </span>
+            <p className="mt-1 text-sm">
+              Keep titles, summaries, and reflections in sync.
+            </p>
           </div>
           <div>
-            <span>Review status</span>
-            <p>Know what is pending, approved, or flagged.</p>
+            <span className="font-semibold text-text-primary">
+              Review status
+            </span>
+            <p className="mt-1 text-sm">
+              Know what is pending, approved, or flagged.
+            </p>
           </div>
         </div>
       </div>

@@ -6,11 +6,11 @@ import { supabase } from "../lib/supabase";
 import Button from "./Button";
 import Input from "./Input";
 
-export default function AccountSettings({
+export default function AdminSettings({
   title,
   subtitle,
-  backHref = "/dashboard",
-  backLabel = "Back to dashboard",
+  backHref = "/admin-dashboard",
+  backLabel = "Back to admin dashboard",
   layout = "page",
   onClose,
 }) {
@@ -103,9 +103,16 @@ export default function AccountSettings({
         <p className="text-text-secondary mb-6">{subtitle}</p>
 
         <section className="mt-6 p-4 rounded-lg border border-border-color bg-white/5">
-          <span className="text-kicker">Current signed-in email</span>
+          <span className="text-kicker">Current admin email</span>
           <p className="mt-2 text-text-primary break-words">
             {email || "Loading email..."}
+          </p>
+        </section>
+
+        <section className="mt-8 pt-6 border-t border-border-color">
+          <h2 className="text-lg mb-4">Admin panel access</h2>
+          <p className="text-text-secondary mb-4">
+            You have full access to the admin dashboard and user management.
           </p>
         </section>
 
