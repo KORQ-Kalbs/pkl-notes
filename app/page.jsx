@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Github, Sparkles } from "lucide-react";
 import gsap from "gsap";
 import Card from "../components/Card";
 
@@ -95,6 +95,19 @@ export default function HomePage() {
           </Card>
         </div>
       </section>
+
+      <footer className="w-[min(1120px,92vw)] mx-auto mt-16 pt-6 border-t border-border-color/60 relative z-10 flex items-center justify-between gap-4 text-sm text-text-secondary">
+        <p>Copyright by KORQ-Kalbs</p>
+        <Link
+          href="https://github.com/KORQ-Kalbs"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="KORQ-Kalbs on GitHub"
+          className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-border-color bg-bg-secondary/70 text-text-primary transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/10"
+        >
+          <Github size={18} />
+        </Link>
+      </footer>
     </main>
   );
 }
