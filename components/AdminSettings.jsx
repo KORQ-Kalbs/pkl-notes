@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
+import { clearAuthCookies } from "../lib/authCookies";
 import Button from "./Button";
 import Input from "./Input";
 
@@ -79,6 +80,16 @@ export default function AdminSettings({
 
     if (signOutError) {
       setError(signOutError.message);
+      setSigningOut(false);
+      return;
+    }
+
+    try {
+      await clearAuthCookies();
+    } catch (sessionError) {
+      setError(
+        sessionError?.message || "Unable to clear the server session cookie.",
+      );
       setSigningOut(false);
       return;
     }

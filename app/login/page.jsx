@@ -56,7 +56,15 @@ export default function LoginPage() {
       return;
     }
 
-    setAuthCookies(data.session);
+    try {
+      await setAuthCookies(data.session);
+    } catch (sessionError) {
+      setError(
+        sessionError?.message || "Unable to persist session. Please try again.",
+      );
+      setLoading(false);
+      return;
+    }
 
     const { profile, error: profileError } = await getUserProfile(
       supabase,

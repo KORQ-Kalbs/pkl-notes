@@ -39,8 +39,18 @@ export default function RegisterPage() {
     }
 
     if (data.session) {
-      setAuthCookies(data.session);
-      router.push("/dashboard");
+      try {
+        await setAuthCookies(data.session);
+        router.push("/dashboard");
+        return;
+      } catch (sessionError) {
+        setError(
+          sessionError?.message ||
+            "Unable to persist session. Please try signing in again.",
+        );
+        setLoading(false);
+        return;
+      }
       return;
     }
 

@@ -180,96 +180,56 @@ export default function NoteEditorPage({
 
     setDeleting(true);
     setError("");
+    setDeleteErrorMsg("");
 
-    // Diagnostic: who is the current auth user?
-    try {
-      const { data: authData } = await supabase.auth.getUser();
-      console.log("Delete diagnostics - auth user:", authData?.user || null);
-    } catch (e) {
-      console.warn("Unable to read auth user before delete", e);
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    const authUser = authData?.user;
+
+    if (authError || !authUser) {
+      setDeleteErrorMsg("No active session. Please sign in again.");
+      setDeleting(false);
+      return;
     }
 
-    // Diagnostic: fetch the note to confirm ownership
-    try {
-      const { data: noteBefore, error: noteErr } = await supabase
-        .from("pkl_notes")
-        .select("id, users_id, title")
-        .eq("id", editingNoteId)
-        .maybeSingle();
+    const { profile, error: profileError } = await ensureUserProfile(
+      supabase,
+      authUser,
+    );
 
-      if (noteErr) {
-        console.warn("Unable to fetch note before delete:", noteErr);
-      } else {
-        console.log(
-          "Delete diagnostics - note before delete:",
-          noteBefore || null,
-        );
-      }
-    } catch (e) {
-      console.warn("Exception fetching note before delete", e);
+    if (profileError || !profile) {
+      setDeleteErrorMsg("Profile not found. Please re-authenticate.");
+      setDeleting(false);
+      return;
     }
 
-    // Diagnostic: fetch current profile mapping (users table) for auth.uid()
-    let currentProfile = null;
-    try {
-      const { data: authData } = await supabase.auth.getUser();
-      const authUid = authData?.user?.id;
-      const { data: profileData, error: profileErr } = await supabase
-        .from("users")
-        .select("id, role, email_user")
-        .eq("email_user", authUid)
-        .maybeSingle();
-
-      if (profileErr) {
-        console.warn("Unable to fetch current profile:", profileErr);
-      } else {
-        currentProfile = profileData || null;
-        console.log("Delete diagnostics - current profile:", currentProfile);
-      }
-    } catch (e) {
-      console.warn("Exception fetching current profile", e);
-    }
-
-    // If we have the note and profile, ensure the user is owner or admin before attempting delete.
-    if (currentProfile && typeof currentProfile.id !== "undefined") {
-      try {
-        const { data: noteCheck } = await supabase
-          .from("pkl_notes")
-          .select("id, users_id")
-          .eq("id", editingNoteId)
-          .maybeSingle();
-
-        if (
-          noteCheck &&
-          noteCheck.users_id !== currentProfile.id &&
-          !currentProfile.role
-        ) {
-          setDeleteErrorMsg("You are not allowed to delete this note.");
-          setDeleting(false);
-          return;
-        }
-      } catch (e) {
-        console.warn("Exception during ownership check", e);
-      }
-    }
+    const isAdmin = Boolean(profile.role);
 
     try {
-      const res = await supabase
+      let deleteQuery = supabase
         .from("pkl_notes")
         .delete()
-        .select()
         .eq("id", editingNoteId);
 
-      if (res.error) {
-        console.error("Delete failed:", res.error);
-        setDeleteErrorMsg(res.error.message || "Unable to delete note.");
+      if (!isAdmin) {
+        deleteQuery = deleteQuery.eq("users_id", profile.id);
+      }
+
+      const { data: deletedRows, error: deleteError } =
+        await deleteQuery.select("id");
+
+      if (deleteError) {
+        console.error("Delete failed:", deleteError);
+        setDeleteErrorMsg(deleteError.message || "Unable to delete note.");
         setDeleting(false);
         return;
       }
 
-      // If no rows returned, still treat as success but warn
-      if (!res.data || res.data.length === 0) {
-        console.warn("Delete returned no rows, but no error.");
+      if (!deletedRows || deletedRows.length === 0) {
+        setDeleteErrorMsg(
+          "Delete failed. The note may no longer exist or you do not have permission to delete it.",
+        );
+        setDeleting(false);
+        return;
       }
 
       setDeleting(false);
