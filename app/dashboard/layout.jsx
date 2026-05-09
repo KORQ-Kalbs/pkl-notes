@@ -3,9 +3,9 @@ import Sidebar from "../../components/Sidebar";
 
 export default function DashboardLayout({ children }) {
   return (
-    <div className="min-h-screen grid grid-cols-[270px_1fr] bg-bg-primary">
+    <div className="min-h-screen bg-bg-primary">
       <Sidebar variant="user" />
-      <main className="pb-16 p-14">{children}</main>
+      <main className="min-h-screen pb-16 p-14 md:ml-[270px]">{children}</main>
     </div>
   );
 }

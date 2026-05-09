@@ -18,12 +18,21 @@ const styles = {
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
+  const [roleDrafts, setRoleDrafts] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [savingUserId, setSavingUserId] = useState("");
+  const [currentAuthUserId, setCurrentAuthUserId] = useState("");
 
   useEffect(() => {
+    loadCurrentUser();
     loadUsers();
   }, []);
+
+  const loadCurrentUser = async () => {
+    const { data } = await supabase.auth.getUser();
+    setCurrentAuthUserId(data?.user?.id || "");
+  };
 
   const loadUsers = async () => {
     setLoading(true);
@@ -31,18 +40,60 @@ export default function AdminUsersPage() {
 
     const { data, error: usersError } = await supabase
       .from("users")
-      .select("id, email_user, password, role")
+      .select("id, email_user, role")
       .order("id", { ascending: false });
 
     if (usersError) {
       setError("Unable to load users list.");
       setUsers([]);
+      setRoleDrafts({});
       setLoading(false);
       return;
     }
 
     setUsers(data || []);
+    setRoleDrafts(
+      Object.fromEntries(
+        (data || []).map((user) => [user.id, Boolean(user.role)]),
+      ),
+    );
     setLoading(false);
+  };
+
+  const handleRoleChange = (userId, value) => {
+    setRoleDrafts((prev) => ({
+      ...prev,
+      [userId]: value === "admin",
+    }));
+  };
+
+  const handleRoleSave = async (user) => {
+    if (user.email_user === currentAuthUserId) {
+      setError("You cannot change your own admin role from this screen.");
+      return;
+    }
+
+    const nextRole = Boolean(roleDrafts[user.id]);
+    setSavingUserId(user.id);
+    setError("");
+
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ role: nextRole })
+      .eq("id", user.id);
+
+    if (updateError) {
+      setError("Unable to update user role.");
+      setSavingUserId("");
+      return;
+    }
+
+    setUsers((prev) =>
+      prev.map((item) =>
+        item.id === user.id ? { ...item, role: nextRole } : item,
+      ),
+    );
+    setSavingUserId("");
   };
 
   return (
@@ -52,7 +103,7 @@ export default function AdminUsersPage() {
           <p className={styles.kicker}>Users management</p>
           <h1 className="font-display text-[2.2rem]">User directory</h1>
           <p className={styles.subtitle}>
-            Review user accounts, roles, and stored credentials.
+            Review user accounts and update roles safely.
           </p>
         </div>
       </header>
@@ -69,9 +120,9 @@ export default function AdminUsersPage() {
             <thead>
               <tr>
                 <th className={`${styles.cell} text-left`}>User ID</th>
-                <th className={`${styles.cell} text-left`}>Email</th>
-                <th className={`${styles.cell} text-left`}>Password</th>
+                <th className={`${styles.cell} text-left`}>Auth User ID</th>
                 <th className={`${styles.cell} text-left`}>Role</th>
+                <th className={`${styles.cell} text-left`}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -79,9 +130,31 @@ export default function AdminUsersPage() {
                 <tr key={user.id} className={styles.row}>
                   <td className={styles.cell}>{user.id}</td>
                   <td className={styles.cell}>{user.email_user}</td>
-                  <td className={styles.cell}>{user.password}</td>
                   <td className={styles.cell}>
-                    {user.role ? "Admin" : "User"}
+                    <select
+                      className={styles.select}
+                      value={roleDrafts[user.id] ? "admin" : "user"}
+                      onChange={(event) =>
+                        handleRoleChange(user.id, event.target.value)
+                      }
+                      disabled={user.email_user === currentAuthUserId}
+                    >
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
+                  <td className={styles.cell}>
+                    <button
+                      type="button"
+                      className={styles.saveButton}
+                      onClick={() => handleRoleSave(user)}
+                      disabled={
+                        savingUserId === user.id ||
+                        user.email_user === currentAuthUserId
+                      }
+                    >
+                      {savingUserId === user.id ? "Saving..." : "Save role"}
+                    </button>
                   </td>
                 </tr>
               ))}

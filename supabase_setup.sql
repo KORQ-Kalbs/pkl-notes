@@ -136,3 +136,15 @@ with check (
   )
   or public.is_admin()
 );
+
+drop policy if exists "pkl_notes_delete_own_or_admin" on public.pkl_notes;
+create policy "pkl_notes_delete_own_or_admin"
+on public.pkl_notes
+for delete
+to authenticated
+using (
+  users_id in (
+    select id from public.users where email_user = auth.uid()
+  )
+  or public.is_admin()
+);

@@ -13,9 +13,9 @@ import {
 import SettingsPanel from "./SettingsPanel";
 
 const baseLinkClass =
-  "inline-flex items-center gap-3 px-4 py-3 rounded-lg text-text-secondary border border-transparent transition-all duration-200 hover:text-text-primary hover:border-border-color hover:bg-white/5";
+  "inline-flex items-center gap-3 px-4 py-3 rounded-lg text-[13px] text-text-secondary border border-transparent transition-all duration-200 hover:text-text-primary hover:border-border-color hover:bg-white/5";
 const activeLinkClass =
-  "inline-flex items-center gap-3 px-4 py-3 rounded-lg text-text-secondary border border-transparent transition-all duration-200 hover:text-text-primary hover:border-border-color hover:bg-white/5 bg-white/5 border-border-color text-text-primary";
+  "inline-flex items-center gap-3 px-4 py-3 rounded-lg text-[13px] text-text-secondary border border-transparent transition-all duration-200 hover:text-text-primary hover:border-border-color hover:bg-white/5 bg-white/5 border-border-color text-text-primary";
 
 const userNav = [
   {
@@ -98,12 +98,14 @@ export default function Sidebar({ variant = "user" }) {
 
   return (
     <>
-      <aside className="flex flex-col gap-10 p-10 border-r bg-bg-secondary border-border-color">
+      <aside className="fixed inset-y-0 left-0 z-30 flex w-[270px] flex-col gap-10 overflow-hidden border-r bg-bg-secondary border-border-color p-10">
         <div className="grid gap-2">
-          <p className="text-kicker">{panelCopy.kicker}</p>
-          <h2 className="font-display text-[1.6rem]">{panelCopy.title}</h2>
+          <p className="text-[12px] uppercase tracking-wider text-text-secondary">
+            {panelCopy.kicker}
+          </p>
+          <h2 className="font-display text-[18px]">{panelCopy.title}</h2>
           {panelCopy.description ? (
-            <p className="text-sm text-text-secondary">
+            <p className="text-[13px] text-text-secondary leading-5">
               {panelCopy.description}
             </p>
           ) : null}
@@ -134,9 +136,15 @@ export default function Sidebar({ variant = "user" }) {
           </button>
         </nav>
         <div className="grid gap-3 p-5 mt-auto border rounded-lg border-border-color bg-white/5">
-          <p className="text-kicker">Session</p>
-          <p className="font-semibold">{panelCopy.sessionTitle}</p>
-          <p className="text-sm text-text-secondary">{panelCopy.sessionMeta}</p>
+          <p className="text-[12px] uppercase tracking-wider text-text-secondary">
+            Session
+          </p>
+          <p className="text-[14px] font-semibold leading-5">
+            {panelCopy.sessionTitle}
+          </p>
+          <p className="text-[12px] text-text-secondary leading-5">
+            {panelCopy.sessionMeta}
+          </p>
         </div>
       </aside>
 

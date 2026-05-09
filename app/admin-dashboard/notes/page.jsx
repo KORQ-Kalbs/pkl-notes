@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import NoteEditorPage from "../../../components/NoteEditorPage";
 
-export default function DashboardNotesPage() {
+export default function AdminNotesPage() {
   return (
     <Suspense
       fallback={
@@ -9,11 +9,11 @@ export default function DashboardNotesPage() {
       }
     >
       <NoteEditorPage
-        backHref="/dashboard/history"
-        backLabel="Back to history"
-        kicker="New note"
-        title="Create a new entry"
-        subtitle="Share your activity, reflection, and next plan."
+        backHref="/admin-dashboard/history"
+        backLabel="Back to admin history"
+        kicker="Admin note editor"
+        title="Edit any submission"
+        subtitle="Review and update note content across the workspace."
       />
     </Suspense>
   );

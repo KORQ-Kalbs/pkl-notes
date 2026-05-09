@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "../../../lib/supabase";
 import { ensureUserProfile } from "../../../lib/userProfile";
 import Badge from "../../../components/Badge";
@@ -20,6 +21,8 @@ const styles = {
   noteSummary: "mt-2 text-text-secondary",
   noteMeta: "text-sm text-text-secondary",
   error: "text-danger",
+  editLink:
+    "inline-flex items-center justify-center px-4 py-2 rounded-lg border border-border-color text-sm font-semibold text-text-primary hover:bg-white/5 transition-colors",
 };
 
 export default function DashboardHistoryPage() {
@@ -106,7 +109,15 @@ export default function DashboardHistoryPage() {
                   <p className={styles.noteSummary}>{note.summary}</p>
                   <p className={styles.noteMeta}>{note.location}</p>
                 </div>
-                <Badge variant={note.status}>{note.status}</Badge>
+                <div className="flex flex-col items-end gap-3">
+                  <Badge variant={note.status}>{note.status}</Badge>
+                  <Link
+                    className={styles.editLink}
+                    href={`/dashboard/notes?edit=${note.id}`}
+                  >
+                    Edit
+                  </Link>
+                </div>
               </article>
             ))}
           </div>
