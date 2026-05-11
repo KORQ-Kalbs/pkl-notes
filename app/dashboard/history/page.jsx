@@ -8,21 +8,23 @@ import Badge from "../../../components/Badge";
 import "../../globals.css";
 
 const styles = {
-  page: "min-h-screen py-18 px-[6vw] bg-bg-primary",
-  header: "flex items-center justify-between mb-8",
+  page: "min-h-screen py-12 sm:py-14 lg:py-18 px-4 sm:px-6 lg:px-[6vw] bg-bg-primary",
+  header:
+    "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8",
   kicker: "text-kicker",
   subtitle: "text-text-secondary",
-  sectionHeader: "flex items-center justify-between mb-4",
+  sectionHeader:
+    "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4",
   muted: "text-text-secondary",
   notesList: "grid gap-4",
   noteCard:
-    "p-4 rounded-lg border border-border-color bg-white/5 flex items-start justify-between",
+    "p-4 rounded-lg border border-border-color bg-white/5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between min-w-0",
   noteDate: "text-sm text-text-secondary",
-  noteSummary: "mt-2 text-text-secondary",
-  noteMeta: "text-sm text-text-secondary",
+  noteSummary: "mt-2 text-text-secondary break-words",
+  noteMeta: "text-sm text-text-secondary break-words",
   error: "text-danger",
   editLink:
-    "inline-flex items-center justify-center px-4 py-2 rounded-lg border border-border-color text-sm font-semibold text-text-primary hover:bg-white/5 transition-colors",
+    "inline-flex min-h-[44px] items-center justify-center px-4 py-2 rounded-lg border border-border-color text-sm font-semibold text-text-primary hover:bg-white/5 transition-colors w-full sm:w-auto",
 };
 
 export default function DashboardHistoryPage() {
@@ -103,13 +105,13 @@ export default function DashboardHistoryPage() {
           <div className={styles.notesList}>
             {notes.map((note) => (
               <article key={note.id} className={styles.noteCard}>
-                <div>
+                <div className="min-w-0">
                   <p className={styles.noteDate}>{note.note_date}</p>
                   <h3>{note.title}</h3>
                   <p className={styles.noteSummary}>{note.summary}</p>
                   <p className={styles.noteMeta}>{note.location}</p>
                 </div>
-                <div className="flex flex-col items-end gap-3">
+                <div className="flex w-full flex-col items-start gap-3 sm:w-auto sm:items-end">
                   <Badge variant={note.status}>{note.status}</Badge>
                   <Link
                     className={styles.editLink}

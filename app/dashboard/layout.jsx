@@ -1,11 +1,6 @@
 import "../globals.css";
-import Sidebar from "../../components/Sidebar";
+import DashboardShell from "../../components/DashboardShell";
 
 export default function DashboardLayout({ children }) {
-  return (
-    <div className="min-h-screen bg-bg-primary">
-      <Sidebar variant="user" />
-      <main className="min-h-screen pb-16 p-14 md:ml-[270px]">{children}</main>
-    </div>
-  );
+  return <DashboardShell variant="user">{children}</DashboardShell>;
 }

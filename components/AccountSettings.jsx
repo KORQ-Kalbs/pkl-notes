@@ -26,7 +26,7 @@ export default function AccountSettings({
   const Wrapper = isModal ? "div" : "main";
   const wrapperClassName = isModal
     ? ""
-    : "min-h-screen py-18 px-[6vw] bg-bg-primary";
+    : "min-h-screen py-12 sm:py-14 lg:py-18 px-4 sm:px-6 lg:px-[6vw] bg-bg-primary";
   const cardClassName = isModal
     ? "card-custom w-full"
     : "card-custom w-[min(760px,100%)] mx-auto";
@@ -145,7 +145,7 @@ export default function AccountSettings({
 
         <section className="mt-8 pt-6 border-t border-border-color">
           <h2 className="text-lg mb-4">Session</h2>
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
             <Button
               variant="ghost"
               size="lg"

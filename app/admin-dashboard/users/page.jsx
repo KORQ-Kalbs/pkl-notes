@@ -5,15 +5,20 @@ import { supabase } from "../../../lib/supabase";
 import "../../globals.css";
 
 const styles = {
-  page: "min-h-screen py-18 px-[6vw] bg-bg-primary",
-  header: "flex items-center justify-between mb-8",
+  page: "min-h-screen py-12 sm:py-14 lg:py-18 px-4 sm:px-6 lg:px-[6vw] bg-bg-primary",
+  header:
+    "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8",
   kicker: "text-kicker",
   subtitle: "text-text-secondary",
-  table: "w-full border-separate border-spacing-y-2",
+  table: "w-full min-w-[720px] border-separate border-spacing-y-2",
   row: "bg-bg-secondary border border-border-color",
-  cell: "px-4 py-3",
+  cell: "px-4 py-3 text-sm align-top",
   muted: "text-text-secondary",
   error: "text-danger",
+  select:
+    "min-h-[44px] rounded-lg border border-border-color bg-white/5 px-3 text-sm text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-white/10 disabled:opacity-60",
+  saveButton:
+    "min-h-[44px] px-4 py-2 rounded-lg border border-border-color text-sm font-semibold text-text-primary transition-colors hover:bg-white/5 disabled:opacity-60",
 };
 
 export default function AdminUsersPage() {

@@ -13,9 +13,9 @@ import {
 import SettingsPanel from "./SettingsPanel";
 
 const baseLinkClass =
-  "inline-flex items-center gap-3 px-4 py-3 rounded-lg text-[13px] text-text-secondary border border-transparent transition-all duration-200 hover:text-text-primary hover:border-border-color hover:bg-white/5";
+  "inline-flex min-h-[44px] items-center gap-3 rounded-lg border border-transparent px-4 py-3 text-[13px] text-text-secondary transition-all duration-200 hover:text-text-primary hover:border-border-color hover:bg-white/5 md:justify-center md:gap-0 md:px-3 lg:justify-start lg:gap-3 lg:px-4";
 const activeLinkClass =
-  "inline-flex items-center gap-3 px-4 py-3 rounded-lg text-[13px] text-text-secondary border border-transparent transition-all duration-200 hover:text-text-primary hover:border-border-color hover:bg-white/5 bg-white/5 border-border-color text-text-primary";
+  "inline-flex min-h-[44px] items-center gap-3 rounded-lg border border-transparent px-4 py-3 text-[13px] text-text-secondary transition-all duration-200 hover:text-text-primary hover:border-border-color hover:bg-white/5 bg-white/5 border-border-color text-text-primary md:justify-center md:gap-0 md:px-3 lg:justify-start lg:gap-3 lg:px-4";
 
 const userNav = [
   {
@@ -53,7 +53,11 @@ const adminNav = [
   },
 ];
 
-export default function Sidebar({ variant = "user" }) {
+export default function Sidebar({
+  variant = "user",
+  mobileOpen = false,
+  onClose,
+}) {
   const pathname = usePathname();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -93,19 +97,56 @@ export default function Sidebar({ variant = "user" }) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [settingsOpen]);
 
+  useEffect(() => {
+    if (!mobileOpen || !onClose) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mobileOpen, onClose]);
+
   const isActive = (href) =>
     pathname === href || (pathname?.startsWith(href) && href !== "/");
 
+  const handleNavClick = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const sidebarStateClass = mobileOpen ? "translate-x-0" : "-translate-x-full";
+
   return (
     <>
-      <aside className="fixed inset-y-0 left-0 z-30 flex w-[270px] flex-col gap-10 overflow-hidden border-r bg-bg-secondary border-border-color p-10">
-        <div className="grid gap-2">
-          <p className="text-[12px] uppercase tracking-wider text-text-secondary">
+      {mobileOpen ? (
+        <button
+          type="button"
+          className="fixed inset-0 z-30 bg-black/60 md:hidden"
+          aria-label="Close sidebar"
+          onClick={handleNavClick}
+        />
+      ) : null}
+      <aside
+        id="sidebar-drawer"
+        className={`fixed inset-y-0 left-0 z-40 flex w-[80vw] max-w-[300px] flex-col gap-8 overflow-y-auto border-r border-border-color bg-bg-secondary p-6 transition-transform duration-300 ease-out ${sidebarStateClass} md:w-20 md:translate-x-0 md:gap-6 md:p-4 lg:w-[var(--sidebar-width)] lg:p-10`}
+      >
+        <div className="grid gap-2 md:justify-items-center lg:justify-items-start">
+          <p className="text-[12px] uppercase tracking-wider text-text-secondary md:hidden lg:block">
             {panelCopy.kicker}
           </p>
-          <h2 className="font-display text-[18px]">{panelCopy.title}</h2>
+          <h2 className="font-display text-[18px] md:hidden lg:block">
+            {panelCopy.title}
+          </h2>
+          <div className="hidden md:flex lg:hidden h-10 w-10 items-center justify-center rounded-full border border-border-color text-[12px] font-semibold text-text-primary">
+            PKL
+          </div>
           {panelCopy.description ? (
-            <p className="text-[13px] text-text-secondary leading-5">
+            <p className="text-[13px] text-text-secondary leading-5 md:hidden lg:block">
               {panelCopy.description}
             </p>
           ) : null}
@@ -117,25 +158,31 @@ export default function Sidebar({ variant = "user" }) {
               <Link
                 key={item.href}
                 href={item.href}
+                title={item.label}
+                onClick={handleNavClick}
                 className={
                   isActive(item.href) ? activeLinkClass : baseLinkClass
                 }
               >
                 <Icon size={18} />
-                {item.label}
+                <span className="md:hidden lg:inline">{item.label}</span>
               </Link>
             );
           })}
           <button
             type="button"
             className={baseLinkClass}
-            onClick={() => setSettingsOpen(true)}
+            title="Settings"
+            onClick={() => {
+              setSettingsOpen(true);
+              handleNavClick();
+            }}
           >
             <Settings size={18} />
-            Settings
+            <span className="md:hidden lg:inline">Settings</span>
           </button>
         </nav>
-        <div className="grid gap-3 p-5 mt-auto border rounded-lg border-border-color bg-white/5">
+        <div className="grid gap-3 p-5 mt-auto border rounded-lg border-border-color bg-white/5 md:hidden lg:grid">
           <p className="text-[12px] uppercase tracking-wider text-text-secondary">
             Session
           </p>

@@ -6,7 +6,7 @@ export default function Button({
   ...props
 }) {
   const baseClasses =
-    "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg";
+    "inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 font-semibold transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg";
 
   const variantClasses = {
     primary: "btn-primary",

@@ -17,6 +17,7 @@
     --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.4);
     --glow-1: rgba(255, 255, 255, 0.08);
     --glow-2: rgba(16, 185, 129, 0.2);
+    --sidebar-width: min(270px, 22vw);
   }
 
   [data-theme="light"] {
@@ -39,8 +40,13 @@
     padding: 0;
   }
 
+  html {
+    width: 100%;
+  }
+
   body {
     min-height: 100vh;
+    overflow-x: hidden;
     background: var(--bg-primary);
     color: var(--text-primary);
     font-family: var(--font-body, "Plus Jakarta Sans", system-ui, sans-serif);

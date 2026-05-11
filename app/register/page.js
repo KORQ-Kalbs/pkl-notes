@@ -61,8 +61,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10 items-center px-[6vw] py-18 gradient-hero-light">
-      <div className="card-custom p-10">
+    <main className="min-h-screen grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10 items-center px-4 sm:px-6 lg:px-[6vw] py-12 sm:py-14 lg:py-18 gradient-hero-light">
+      <div className="card-custom p-6 sm:p-8 lg:p-10">
         <div className="mb-8">
           <p className="text-kicker mb-4">Create your space</p>
           <h1 className="font-display text-[2.2rem] mb-2">Start PKL Notes</h1>
@@ -101,11 +101,14 @@ export default function RegisterPage() {
             Sign in
           </Link>
         </p>
-        <Link className="inline-flex mt-5 text-text-secondary text-xs" href="/">
+        <Link
+          className="inline-flex min-h-[44px] items-center mt-5 text-text-secondary text-xs"
+          href="/"
+        >
           Back to home
         </Link>
       </div>
-      <div className="bg-bg-secondary/70 border border-border-color rounded-[26px] p-10 text-text-secondary grid gap-6">
+      <div className="bg-bg-secondary/70 border border-border-color rounded-[26px] p-6 sm:p-8 lg:p-10 text-text-secondary grid gap-6">
         <h2 className="text-text-primary font-display text-[1.8rem]">
           Built for PKL consistency
         </h2>

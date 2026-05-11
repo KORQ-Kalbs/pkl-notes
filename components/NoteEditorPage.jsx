@@ -243,8 +243,8 @@ export default function NoteEditorPage({
   };
 
   return (
-    <main className="min-h-screen py-18 px-[6vw] bg-bg-primary">
-      <header className="flex flex-wrap items-center justify-between gap-6 mb-8">
+    <main className="min-h-screen py-12 sm:py-14 lg:py-18 px-4 sm:px-6 lg:px-[6vw] bg-bg-primary">
+      <header className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <div>
           <p className="text-kicker">{kicker}</p>
           <h1 className="font-display text-[2.2rem]">
@@ -252,7 +252,11 @@ export default function NoteEditorPage({
           </h1>
           <p className="mt-2 text-text-secondary">{subtitle}</p>
         </div>
-        <Button variant="outline" onClick={() => router.push(backHref)}>
+        <Button
+          variant="outline"
+          className="w-full sm:w-auto"
+          onClick={() => router.push(backHref)}
+        >
           {backLabel}
         </Button>
       </header>
@@ -262,7 +266,7 @@ export default function NoteEditorPage({
           <p className="text-text-secondary">Loading note editor...</p>
         ) : (
           <form className="grid gap-4" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Input
                 label="Date"
                 type="date"
@@ -288,7 +292,7 @@ export default function NoteEditorPage({
                 required
               />
               <div className="hidden md:block" />
-              <label className="flex flex-col col-span-2 gap-2">
+              <label className="flex flex-col gap-2 md:col-span-2">
                 <span>Summary</span>
                 <textarea
                   className="h-32 resize-none input-custom"
@@ -321,7 +325,7 @@ export default function NoteEditorPage({
                   required
                 />
               </label>
-              <label className="flex flex-col col-span-2 gap-2">
+              <label className="flex flex-col gap-2 md:col-span-2">
                 <span>Next plan</span>
                 <textarea
                   className="h-32 resize-none input-custom"
@@ -334,11 +338,12 @@ export default function NoteEditorPage({
               </label>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Button
                 type="submit"
                 variant="primary"
                 size="lg"
+                className="w-full sm:w-auto"
                 disabled={submitting}
               >
                 {submitting
@@ -354,6 +359,7 @@ export default function NoteEditorPage({
                   type="button"
                   variant="ghost"
                   size="lg"
+                  className="w-full sm:w-auto"
                   onClick={() => router.push(backHref)}
                 >
                   Cancel
@@ -364,6 +370,7 @@ export default function NoteEditorPage({
                   type="button"
                   variant="outline"
                   size="lg"
+                  className="w-full sm:w-auto"
                   onClick={() => {
                     setDeleteErrorMsg("");
                     setDeleteOpen(true);
@@ -389,11 +396,12 @@ export default function NoteEditorPage({
               This note will be permanently deleted and cannot be restored.
             </p>
 
-            <div className="flex flex-wrap gap-3 mt-6">
+            <div className="flex flex-col gap-3 mt-6 sm:flex-row">
               <Button
                 type="button"
                 variant="ghost"
                 size="lg"
+                className="w-full sm:w-auto"
                 onClick={() => setDeleteOpen(false)}
                 disabled={deleting}
               >
@@ -403,6 +411,7 @@ export default function NoteEditorPage({
                 type="button"
                 variant="primary"
                 size="lg"
+                className="w-full sm:w-auto"
                 onClick={handleDelete}
                 disabled={deleting}
               >

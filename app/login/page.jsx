@@ -110,8 +110,8 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10 items-center px-[6vw] py-18 gradient-hero-light">
-      <div className="p-10 card-custom">
+    <main className="min-h-screen grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10 items-center px-4 sm:px-6 lg:px-[6vw] py-12 sm:py-14 lg:py-18 gradient-hero-light">
+      <div className="p-6 sm:p-8 lg:p-10 card-custom">
         <div className="mb-8">
           <p className="mb-4 text-kicker">Welcome back</p>
           <h1 className="font-display text-[2.2rem] mb-2">
@@ -148,7 +148,7 @@ export default function LoginPage() {
         {info ? <p className="mt-4 text-info">{info}</p> : null}
         <button
           type="button"
-          className="p-0 mt-3 font-semibold bg-transparent border-0 cursor-pointer text-warning disabled:opacity-60 disabled:cursor-not-allowed"
+          className="inline-flex min-h-[44px] items-center p-0 mt-3 font-semibold bg-transparent border-0 cursor-pointer text-warning disabled:opacity-60 disabled:cursor-not-allowed"
           onClick={handleResendConfirmation}
           disabled={resending}
         >
@@ -160,11 +160,14 @@ export default function LoginPage() {
             Create an account
           </Link>
         </p>
-        <Link className="inline-flex mt-5 text-xs text-text-secondary" href="/">
+        <Link
+          className="inline-flex min-h-[44px] items-center mt-5 text-xs text-text-secondary"
+          href="/"
+        >
           Back to home
         </Link>
       </div>
-      <div className="bg-bg-secondary/70 border border-border-color rounded-[26px] p-10 text-text-secondary grid gap-6">
+      <div className="bg-bg-secondary/70 border border-border-color rounded-[26px] p-6 sm:p-8 lg:p-10 text-text-secondary grid gap-6">
         <h2 className="text-text-primary font-display text-[1.8rem]">
           Daily clarity, every day
         </h2>

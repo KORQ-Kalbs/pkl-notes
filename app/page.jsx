@@ -96,7 +96,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="w-[min(1120px,92vw)] mx-auto mt-16 pt-6 border-t border-border-color/60 relative z-10 flex items-center justify-between gap-4 text-sm text-text-secondary">
+      <footer className="w-[min(1120px,92vw)] mx-auto mt-16 pt-6 border-t border-border-color/60 relative z-10 flex flex-col gap-4 text-sm text-text-secondary sm:flex-row sm:items-center sm:justify-between">
         <p>Copyright by KORQ-Kalbs</p>
         <Link
           href="https://github.com/KORQ-Kalbs"

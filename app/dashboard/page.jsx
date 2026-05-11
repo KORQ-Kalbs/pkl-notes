@@ -7,22 +7,23 @@ import Badge from "../../components/Badge";
 import "../globals.css";
 
 const styles = {
-  page: "min-h-screen py-18 px-[6vw] bg-bg-primary",
-  header: "flex flex-col gap-3 mb-10",
+  page: "min-h-screen py-12 sm:py-14 lg:py-18 px-4 sm:px-6 lg:px-[6vw] bg-bg-primary",
+  header: "flex flex-col gap-3 mb-8 sm:mb-10",
   kicker: "text-kicker",
   subtitle: "text-text-secondary",
-  stats: "grid gap-4 md:grid-cols-4",
+  stats: "grid gap-4 sm:grid-cols-2 lg:grid-cols-4",
   statCard: "card-custom",
   statLabel: "text-text-secondary text-sm",
   statValue: "text-[1.8rem] font-display",
-  sectionHeader: "flex items-center justify-between mb-4",
+  sectionHeader:
+    "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4",
   listSection: "mt-10",
   notesList: "grid gap-4",
   noteCard:
-    "p-4 rounded-lg border border-border-color bg-white/5 flex items-start justify-between",
+    "p-4 rounded-lg border border-border-color bg-white/5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between min-w-0",
   noteDate: "text-sm text-text-secondary",
-  noteSummary: "mt-2 text-text-secondary",
-  noteMeta: "text-sm text-text-secondary",
+  noteSummary: "mt-2 text-text-secondary break-words",
+  noteMeta: "text-sm text-text-secondary break-words",
   muted: "text-text-secondary",
   error: "text-danger",
 };
@@ -171,7 +172,7 @@ export default function DashboardPage() {
           <div className={styles.notesList}>
             {recentNotes.map((note) => (
               <article key={note.id} className={styles.noteCard}>
-                <div>
+                <div className="min-w-0">
                   <p className={styles.noteDate}>{note.note_date}</p>
                   <h3>{note.title}</h3>
                   <p className={styles.noteSummary}>{note.summary}</p>
